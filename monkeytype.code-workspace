@@ -38,7 +38,8 @@
       "**/dist/**": true,
       "**/public/**": true,
       "**/coverage/**": true,
-      "**/logs/**": true
+      "**/logs/**": true,
+      "**/.turbo/**": true
     },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSaveMode": "file",
