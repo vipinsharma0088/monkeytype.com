@@ -8,11 +8,12 @@ import AnimatedModal, {
   HideOptions,
   ShowOptions,
 } from "../utils/animated-modal";
+import { Layout } from "../types/types";
 
 type FilterPreset = {
   display: string;
-  getIncludeString: (layout: MonkeyTypes.Layout) => string[];
-  getExcludeString: (layout: MonkeyTypes.Layout) => string[];
+  getIncludeString: (layout: Layout) => string[];
+  getExcludeString: (layout: Layout) => string[];
 };
 
 const presets: Record<string, FilterPreset> = {

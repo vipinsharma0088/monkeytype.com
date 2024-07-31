@@ -1,3 +1,5 @@
+import { Quote } from "../../types/types";
+
 const BASE_PATH = "/quotes";
 
 export default class Quotes {
@@ -51,9 +53,7 @@ export default class Quotes {
     });
   }
 
-  async getRating(
-    quote: MonkeyTypes.Quote
-  ): Ape.EndpointResponse<Ape.Quotes.GetRating> {
+  async getRating(quote: Quote): Ape.EndpointResponse<Ape.Quotes.GetRating> {
     const searchQuery = {
       quoteId: quote.id,
       language: quote.language,
@@ -63,7 +63,7 @@ export default class Quotes {
   }
 
   async addRating(
-    quote: MonkeyTypes.Quote,
+    quote: Quote,
     rating: number
   ): Ape.EndpointResponse<Ape.Quotes.PostRating> {
     const payload = {

@@ -1,3 +1,12 @@
+import {
+  Challenge,
+  FontObject,
+  FunboxMetadata,
+  GithubRelease,
+  Layout,
+  Layouts,
+  Theme,
+} from "../types/types";
 import { hexToHSL } from "./colors";
 
 /**
@@ -66,11 +75,9 @@ export const cachedFetchJson = memoizeAsync<string, typeof fetchJson>(
  * Fetches the layouts list from the server.
  * @returns A promise that resolves to the layouts list.
  */
-export async function getLayoutsList(): Promise<MonkeyTypes.Layouts> {
+export async function getLayoutsList(): Promise<Layouts> {
   try {
-    const layoutsList = await cachedFetchJson<MonkeyTypes.Layouts>(
-      "/layouts/_list.json"
-    );
+    const layoutsList = await cachedFetchJson<Layouts>("/layouts/_list.json");
     return layoutsList;
   } catch (e) {
     throw new Error("Layouts JSON fetch failed");
@@ -83,9 +90,7 @@ export async function getLayoutsList(): Promise<MonkeyTypes.Layouts> {
  * @returns A promise that resolves to the layout object.
  * @throws {Error} If the layout list or layout doesn't exist.
  */
-export async function getLayout(
-  layoutName: string
-): Promise<MonkeyTypes.Layout> {
+export async function getLayout(layoutName: string): Promise<Layout> {
   const layouts = await getLayoutsList();
   const layout = layouts[layoutName];
   if (layout === undefined) {
@@ -94,20 +99,18 @@ export async function getLayout(
   return layout;
 }
 
-let themesList: MonkeyTypes.Theme[] | undefined;
+let themesList: Theme[] | undefined;
 
 /**
  * Fetches the list of themes from the server, sorting them alphabetically by name.
  * If the list has already been fetched, returns the cached list.
  * @returns A promise that resolves to the sorted list of themes.
  */
-export async function getThemesList(): Promise<MonkeyTypes.Theme[]> {
+export async function getThemesList(): Promise<Theme[]> {
   if (!themesList) {
-    let themes = await cachedFetchJson<MonkeyTypes.Theme[]>(
-      "/themes/_list.json"
-    );
+    let themes = await cachedFetchJson<Theme[]>("/themes/_list.json");
 
-    themes = themes.sort(function (a: MonkeyTypes.Theme, b: MonkeyTypes.Theme) {
+    themes = themes.sort(function (a: Theme, b: Theme) {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
       if (nameA < nameB) return -1;
@@ -121,13 +124,13 @@ export async function getThemesList(): Promise<MonkeyTypes.Theme[]> {
   }
 }
 
-let sortedThemesList: MonkeyTypes.Theme[] | undefined;
+let sortedThemesList: Theme[] | undefined;
 
 /**
  * Fetches the sorted list of themes from the server.
  * @returns A promise that resolves to the sorted list of themes.
  */
-export async function getSortedThemesList(): Promise<MonkeyTypes.Theme[]> {
+export async function getSortedThemesList(): Promise<Theme[]> {
   if (!sortedThemesList) {
     if (!themesList) {
       await getThemesList();
@@ -163,36 +166,51 @@ export async function getLanguageList(): Promise<string[]> {
   }
 }
 
+export type LanguageGroup = {
+  name: string;
+  languages: string[];
+};
+
 /**
  * Fetches the list of language groups from the server.
  * @returns A promise that resolves to the list of language groups.
  */
-export async function getLanguageGroups(): Promise<
-  MonkeyTypes.LanguageGroup[]
-> {
+export async function getLanguageGroups(): Promise<LanguageGroup[]> {
   try {
-    const languageGroupList = await cachedFetchJson<
-      MonkeyTypes.LanguageGroup[]
-    >("/languages/_groups.json");
+    const languageGroupList = await cachedFetchJson<LanguageGroup[]>(
+      "/languages/_groups.json"
+    );
     return languageGroupList;
   } catch (e) {
     throw new Error("Language groups JSON fetch failed");
   }
 }
 
-let currentLanguage: MonkeyTypes.LanguageObject;
+type Accents = [string, string][];
+
+export type LanguageObject = {
+  name: string;
+  rightToLeft: boolean;
+  noLazyMode?: boolean;
+  ligatures?: boolean;
+  orderedByFrequency?: boolean;
+  words: string[];
+  additionalAccents: Accents;
+  bcp47?: string;
+  originalPunctuation?: boolean;
+};
+
+let currentLanguage: LanguageObject;
 
 /**
  * Fetches the language object for a given language from the server.
  * @param lang The language code.
  * @returns A promise that resolves to the language object.
  */
-export async function getLanguage(
-  lang: string
-): Promise<MonkeyTypes.LanguageObject> {
+export async function getLanguage(lang: string): Promise<LanguageObject> {
   // try {
   if (currentLanguage === undefined || currentLanguage.name !== lang) {
-    currentLanguage = await cachedFetchJson<MonkeyTypes.LanguageObject>(
+    currentLanguage = await cachedFetchJson<LanguageObject>(
       `/languages/${lang}.json`
     );
   }
@@ -206,7 +224,7 @@ export async function getLanguage(
  */
 export async function getCurrentLanguage(
   languageName: string
-): Promise<MonkeyTypes.LanguageObject> {
+): Promise<LanguageObject> {
   return await getLanguage(languageName);
 }
 
@@ -217,8 +235,8 @@ export async function getCurrentLanguage(
  */
 export async function getCurrentGroup(
   language: string
-): Promise<MonkeyTypes.LanguageGroup | undefined> {
-  let retgroup: MonkeyTypes.LanguageGroup | undefined;
+): Promise<LanguageGroup | undefined> {
+  let retgroup: LanguageGroup | undefined;
   const groups = await getLanguageGroups();
   groups.forEach((group) => {
     if (retgroup === undefined) {
@@ -230,21 +248,16 @@ export async function getCurrentGroup(
   return retgroup;
 }
 
-let funboxList: MonkeyTypes.FunboxMetadata[] | undefined;
+let funboxList: FunboxMetadata[] | undefined;
 
 /**
  * Fetches the list of funbox metadata from the server.
  * @returns A promise that resolves to the list of funbox metadata.
  */
-export async function getFunboxList(): Promise<MonkeyTypes.FunboxMetadata[]> {
+export async function getFunboxList(): Promise<FunboxMetadata[]> {
   if (!funboxList) {
-    let list = await cachedFetchJson<MonkeyTypes.FunboxMetadata[]>(
-      "/funbox/_list.json"
-    );
-    list = list.sort(function (
-      a: MonkeyTypes.FunboxMetadata,
-      b: MonkeyTypes.FunboxMetadata
-    ) {
+    let list = await cachedFetchJson<FunboxMetadata[]>("/funbox/_list.json");
+    list = list.sort(function (a: FunboxMetadata, b: FunboxMetadata) {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
       if (nameA < nameB) return -1;
@@ -265,28 +278,23 @@ export async function getFunboxList(): Promise<MonkeyTypes.FunboxMetadata[]> {
  */
 export async function getFunbox(
   funbox: string
-): Promise<MonkeyTypes.FunboxMetadata | undefined> {
-  const list: MonkeyTypes.FunboxMetadata[] = await getFunboxList();
+): Promise<FunboxMetadata | undefined> {
+  const list: FunboxMetadata[] = await getFunboxList();
   return list.find(function (element) {
     return element.name === funbox;
   });
 }
 
-let fontsList: MonkeyTypes.FontObject[] | undefined;
+let fontsList: FontObject[] | undefined;
 
 /**
  * Fetches the list of font objects from the server.
  * @returns A promise that resolves to the list of font objects.
  */
-export async function getFontsList(): Promise<MonkeyTypes.FontObject[]> {
+export async function getFontsList(): Promise<FontObject[]> {
   if (!fontsList) {
-    let list = await cachedFetchJson<MonkeyTypes.FontObject[]>(
-      "/fonts/_list.json"
-    );
-    list = list.sort(function (
-      a: MonkeyTypes.FontObject,
-      b: MonkeyTypes.FontObject
-    ) {
+    let list = await cachedFetchJson<FontObject[]>("/fonts/_list.json");
+    list = list.sort(function (a: FontObject, b: FontObject) {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
       if (nameA < nameB) return -1;
@@ -304,11 +312,9 @@ export async function getFontsList(): Promise<MonkeyTypes.FontObject[]> {
  * Fetches the list of challenges from the server.
  * @returns A promise that resolves to the list of challenges.
  */
-export async function getChallengeList(): Promise<MonkeyTypes.Challenge[]> {
+export async function getChallengeList(): Promise<Challenge[]> {
   try {
-    const data = await cachedFetchJson<MonkeyTypes.Challenge[]>(
-      "/challenges/_list.json"
-    );
+    const data = await cachedFetchJson<Challenge[]>("/challenges/_list.json");
     return data;
   } catch (e) {
     throw new Error("Challenge list JSON fetch failed");
@@ -360,9 +366,7 @@ export async function getLatestReleaseFromGitHub(): Promise<string> {
  * Fetches the list of releases from GitHub.
  * @returns A promise that resolves to the list of releases.
  */
-export async function getReleasesFromGitHub(): Promise<
-  MonkeyTypes.GithubRelease[]
-> {
+export async function getReleasesFromGitHub(): Promise<GithubRelease[]> {
   return cachedFetchJson(
     "https://api.github.com/repos/monkeytypegame/monkeytype/releases?per_page=5"
   );

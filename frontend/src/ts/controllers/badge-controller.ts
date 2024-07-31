@@ -1,4 +1,6 @@
-const badges: Record<number, MonkeyTypes.UserBadge> = {
+import { UserBadge } from "../types/types";
+
+const badges: Record<number, UserBadge> = {
   1: {
     id: 1,
     name: "Developer",
@@ -119,7 +121,7 @@ export function getHTMLById(
   noBalloon = false,
   showUnknown = false
 ): string {
-  const badge = badges[id] as MonkeyTypes.UserBadge | undefined;
+  const badge = badges[id] as UserBadge | undefined;
 
   if (!badge && !showUnknown) {
     return "";
@@ -160,6 +162,6 @@ export function getHTMLById(
   }</div>`;
 }
 
-export function getById(id: number): MonkeyTypes.UserBadge | undefined {
+export function getById(id: number): UserBadge | undefined {
   return badges[id];
 }

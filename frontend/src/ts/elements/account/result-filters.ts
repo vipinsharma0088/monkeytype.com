@@ -8,8 +8,9 @@ import Ape from "../../ape/index";
 import * as Loader from "../loader";
 // @ts-expect-error TODO: update slim-select
 import SlimSelect from "slim-select";
-import { ResultFilters } from "@monkeytype/shared-types";
+import { ResultFilters, UserTag } from "@monkeytype/shared-types";
 import { QuoteLength } from "@monkeytype/contracts/schemas/configs";
+import { DefaultTimeModes, DefaultWordsModes, Filter } from "../../types/types";
 
 type Option = {
   id: string;
@@ -298,14 +299,14 @@ function getGroup<G extends keyof ResultFilters>(group: G): ResultFilters[G] {
 
 export function getFilter<G extends keyof ResultFilters>(
   group: G,
-  filter: MonkeyTypes.Filter<G>
-): ResultFilters[G][MonkeyTypes.Filter<G>] {
+  filter: Filter<G>
+): ResultFilters[G][Filter<G>] {
   return filters[group][filter];
 }
 
 function setFilter(
   group: keyof ResultFilters,
-  filter: MonkeyTypes.Filter<typeof group>,
+  filter: Filter<typeof group>,
   value: boolean
 ): void {
   filters[group][filter as keyof typeof filters[typeof group]] = value as never;
@@ -318,7 +319,7 @@ function setAllFilters(group: keyof ResultFilters, value: boolean): void {
   });
 }
 
-export function loadTags(tags: MonkeyTypes.UserTag[]): void {
+export function loadTags(tags: UserTag[]): void {
   tags.forEach((tag) => {
     defaultResultFilters.tags[tag._id] = true;
   });
@@ -536,7 +537,7 @@ export function updateActive(): void {
 
 function toggle<G extends keyof ResultFilters>(
   group: G,
-  filter: MonkeyTypes.Filter<G>
+  filter: Filter<G>
 ): void {
   // user is changing the filters -> current filter is no longer a filter preset
   deSelectFilterPreset();
@@ -547,8 +548,7 @@ function toggle<G extends keyof ResultFilters>(
     }
     const currentValue = filters[group][filter] as unknown as boolean;
     const newValue = !currentValue;
-    filters[group][filter] =
-      newValue as unknown as ResultFilters[G][MonkeyTypes.Filter<G>];
+    filters[group][filter] = newValue as unknown as ResultFilters[G][Filter<G>];
     save();
   } catch (e) {
     Notifications.add(
@@ -568,7 +568,7 @@ $(
   const group = $(e.target)
     .parents(".buttons")
     .attr("group") as keyof ResultFilters;
-  const filter = $(e.target).attr("filter") as MonkeyTypes.Filter<typeof group>;
+  const filter = $(e.target).attr("filter") as Filter<typeof group>;
   if ($(e.target).hasClass("allFilters")) {
     Misc.typedKeys(getFilters()).forEach((group) => {
       // id and name field do not correspond to any ui elements, no need to update
@@ -645,20 +645,20 @@ $(".pageAccount .topFilters button.currentConfigFilter").on("click", () => {
   filters.mode[Config.mode] = true;
   if (Config.mode === "time") {
     if ([15, 30, 60, 120].includes(Config.time)) {
-      const configTime = Config.time as MonkeyTypes.DefaultTimeModes;
+      const configTime = Config.time as DefaultTimeModes;
       filters.time[configTime] = true;
     } else {
       filters.time.custom = true;
     }
   } else if (Config.mode === "words") {
     if ([10, 25, 50, 100, 200].includes(Config.words)) {
-      const configWords = Config.words as MonkeyTypes.DefaultWordsModes;
+      const configWords = Config.words as DefaultWordsModes;
       filters.words[configWords] = true;
     } else {
       filters.words.custom = true;
     }
   } else if (Config.mode === "quote") {
-    const filterName: MonkeyTypes.Filter<"quoteLength">[] = [
+    const filterName: Filter<"quoteLength">[] = [
       "short",
       "medium",
       "long",

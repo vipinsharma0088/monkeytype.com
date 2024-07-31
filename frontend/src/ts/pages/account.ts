@@ -34,6 +34,13 @@ import {
   Mode2Custom,
   PersonalBests,
 } from "@monkeytype/contracts/schemas/shared";
+import {
+  AccChartData,
+  ActivityChartDataPoint,
+  Filter,
+  HistoryChartData,
+  QuoteModes,
+} from "../types/types";
 
 let filterDebug = false;
 //toggle filterdebug
@@ -205,8 +212,8 @@ function reset(): void {
 }
 
 let totalSecondsFiltered = 0;
-let chartData: MonkeyTypes.HistoryChartData[] = [];
-let accChartData: MonkeyTypes.AccChartData[] = [];
+let chartData: HistoryChartData[] = [];
+let accChartData: AccChartData[] = [];
 
 async function fillContent(): Promise<void> {
   LoadingPage.updateText("Displaying stats...");
@@ -347,7 +354,7 @@ async function fillContent(): Promise<void> {
       }
 
       if (result.quoteLength !== null) {
-        let filter: MonkeyTypes.QuoteModes | undefined = undefined;
+        let filter: QuoteModes | undefined = undefined;
         if (result.quoteLength === 0) {
           filter = "short";
         } else if (result.quoteLength === 1) {
@@ -386,7 +393,7 @@ async function fillContent(): Promise<void> {
         return;
       }
 
-      let puncfilter: MonkeyTypes.Filter<"punctuation"> = "off";
+      let puncfilter: Filter<"punctuation"> = "off";
       if (result.punctuation) {
         puncfilter = "on";
       }
@@ -397,7 +404,7 @@ async function fillContent(): Promise<void> {
         return;
       }
 
-      let numfilter: MonkeyTypes.Filter<"numbers"> = "off";
+      let numfilter: Filter<"numbers"> = "off";
       if (result.numbers) {
         numfilter = "on";
       }
@@ -663,9 +670,8 @@ async function fillContent(): Promise<void> {
   loadMoreLines();
   ////////
 
-  const activityChartData_timeAndAmount: MonkeyTypes.ActivityChartDataPoint[] =
-    [];
-  const activityChartData_avgWpm: MonkeyTypes.ActivityChartDataPoint[] = [];
+  const activityChartData_timeAndAmount: ActivityChartDataPoint[] = [];
+  const activityChartData_avgWpm: ActivityChartDataPoint[] = [];
   const wpmStepSize = typingSpeedUnit.historyStepSize;
 
   // let lastTimestamp = 0;
@@ -739,7 +745,7 @@ async function fillContent(): Promise<void> {
     const pb: { x: number; y: number }[] = [];
 
     for (let i = chartData.length - 1; i >= 0; i--) {
-      const a = chartData[i] as MonkeyTypes.HistoryChartData;
+      const a = chartData[i] as HistoryChartData;
       if (a.y > currentPb) {
         currentPb = a.y;
         pb.push(a);

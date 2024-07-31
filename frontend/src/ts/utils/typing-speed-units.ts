@@ -1,6 +1,7 @@
 import { TypingSpeedUnit } from "@monkeytype/contracts/schemas/configs";
+import { TypingSpeedUnitSettings } from "../types/types";
 
-class Unit implements MonkeyTypes.TypingSpeedUnitSettings {
+class Unit implements TypingSpeedUnitSettings {
   unit: TypingSpeedUnit;
   convertFactor: number;
   fullUnitString: string;
@@ -38,8 +39,6 @@ const typingSpeedUnits: Record<TypingSpeedUnit, Unit> = {
   wph: new Unit("wph", 60, "Words per Hour", 250, 1000),
 };
 
-export function get(
-  unit: TypingSpeedUnit
-): MonkeyTypes.TypingSpeedUnitSettings {
+export function get(unit: TypingSpeedUnit): TypingSpeedUnitSettings {
   return typingSpeedUnits[unit];
 }

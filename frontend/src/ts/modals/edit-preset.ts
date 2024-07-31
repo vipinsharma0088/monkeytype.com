@@ -6,6 +6,7 @@ import * as Settings from "../pages/settings";
 import * as Notifications from "../elements/notifications";
 import * as ConnectionState from "../states/connection";
 import AnimatedModal from "../utils/animated-modal";
+import { ConfigChanges, SnapshotPreset, UserTag } from "../types/types";
 
 export function show(action: string, id?: string, name?: string): void {
   if (!ConnectionState.get()) {
@@ -71,7 +72,7 @@ async function apply(): Promise<void> {
     "checked"
   );
 
-  let configChanges: MonkeyTypes.ConfigChanges = {};
+  let configChanges: ConfigChanges = {};
 
   if ((updateConfig && action === "edit") || action === "add") {
     configChanges = Config.getConfigChanges();
@@ -79,8 +80,8 @@ async function apply(): Promise<void> {
     const tags = DB.getSnapshot()?.tags ?? [];
 
     const activeTagIds: string[] = tags
-      .filter((tag: MonkeyTypes.UserTag) => tag.active)
-      .map((tag: MonkeyTypes.UserTag) => tag._id);
+      .filter((tag: UserTag) => tag.active)
+      .map((tag: UserTag) => tag._id);
     configChanges.tags = activeTagIds;
   }
 
@@ -110,7 +111,7 @@ async function apply(): Promise<void> {
         config: configChanges,
         display: propPresetName,
         _id: response.body.data.presetId,
-      } as MonkeyTypes.SnapshotPreset);
+      } as SnapshotPreset);
     }
   } else if (action === "edit") {
     const response = await Ape.presets.save({
@@ -126,8 +127,8 @@ async function apply(): Promise<void> {
     } else {
       Notifications.add("Preset updated", 1);
       const preset = snapshotPresets.filter(
-        (preset: MonkeyTypes.SnapshotPreset) => preset._id === presetId
-      )[0] as MonkeyTypes.SnapshotPreset;
+        (preset: SnapshotPreset) => preset._id === presetId
+      )[0] as SnapshotPreset;
       preset.name = presetName;
       preset.display = presetName.replace(/_/g, " ");
       if (updateConfig) {
@@ -144,13 +145,11 @@ async function apply(): Promise<void> {
       );
     } else {
       Notifications.add("Preset removed", 1);
-      snapshotPresets.forEach(
-        (preset: MonkeyTypes.SnapshotPreset, index: number) => {
-          if (preset._id === presetId) {
-            snapshotPresets.splice(index, 1);
-          }
+      snapshotPresets.forEach((preset: SnapshotPreset, index: number) => {
+        if (preset._id === presetId) {
+          snapshotPresets.splice(index, 1);
         }
-      );
+      });
     }
   }
 

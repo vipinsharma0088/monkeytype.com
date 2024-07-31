@@ -9,8 +9,9 @@ import * as Hangul from "hangul-js";
 import * as Notifications from "../elements/notifications";
 import * as ActivePage from "../states/active-page";
 import * as TestWords from "../test/test-words";
+import { Keys, Layout } from "../types/types";
 
-const stenoKeys: MonkeyTypes.Layout = {
+const stenoKeys: Layout = {
   keymapShowTopRow: true,
   type: "matrix",
   keys: {
@@ -171,7 +172,7 @@ export async function refresh(
     const rowIds = Object.keys(lts.keys);
 
     for (let index = 0; index < rowIds.length; index++) {
-      const row = rowIds[index] as keyof MonkeyTypes.Keys;
+      const row = rowIds[index] as keyof Keys;
       let rowKeys = lts.keys[row];
       if (row === "row1" && (isMatrix || Config.keymapStyle === "staggered")) {
         rowKeys = rowKeys.slice(1);

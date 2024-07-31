@@ -1,6 +1,7 @@
 import { format } from "date-fns/format";
 import { getReleasesFromGitHub } from "../utils/json-data";
 import AnimatedModal from "../utils/animated-modal";
+import { GithubRelease } from "../types/types";
 
 export function show(): void {
   void modal.show({
@@ -13,7 +14,7 @@ export function show(): void {
       getReleasesFromGitHub()
         .then((releases) => {
           $("#versionHistoryModal .modal").html(`<div class="releases"></div`);
-          releases.forEach((release: MonkeyTypes.GithubRelease) => {
+          releases.forEach((release: GithubRelease) => {
             if (!release.draft && !release.prerelease) {
               let body = release.body;
 

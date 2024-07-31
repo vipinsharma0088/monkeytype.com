@@ -146,7 +146,7 @@ export default class Users {
 
   async editCustomTheme(
     themeId: string,
-    newTheme: Partial<MonkeyTypes.CustomTheme>
+    newTheme: Partial<CustomTheme>
   ): Ape.EndpointResponse<null> {
     const payload = {
       themeId: themeId,
@@ -170,7 +170,7 @@ export default class Users {
   }
 
   async addCustomTheme(
-    newTheme: Partial<MonkeyTypes.CustomTheme>
+    newTheme: Partial<CustomTheme>
   ): Ape.EndpointResponse<CustomTheme> {
     const payload = { name: newTheme.name, colors: newTheme.colors };
     return await this.httpClient.post(`${BASE_PATH}/customThemes`, { payload });

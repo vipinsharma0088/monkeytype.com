@@ -6,6 +6,7 @@ import * as Loader from "../elements/loader";
 import * as ConnectionState from "../states/connection";
 import { getSnapshot, setSnapshot } from "../db";
 import AnimatedModal from "../utils/animated-modal";
+import { Snapshot } from "../types/types";
 
 export function show(): void {
   if (!ConnectionState.get()) {
@@ -91,7 +92,7 @@ async function apply(): Promise<void> {
     );
   } else {
     Notifications.add("Streak hour offset set", 1);
-    const snap = getSnapshot() as MonkeyTypes.Snapshot;
+    const snap = getSnapshot() as Snapshot;
     snap.streakHourOffset = value;
     setSnapshot(snap);
     hide();

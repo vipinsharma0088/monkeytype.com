@@ -2,6 +2,7 @@ import Config from "../config";
 import * as JSONData from "../utils/json-data";
 import { capsState } from "./caps-warning";
 import * as Notifications from "../elements/notifications";
+import { Layout } from "../types/types";
 
 export let leftState = false;
 export let rightState = false;
@@ -283,7 +284,7 @@ export function isUsingOppositeShift(keycode: string): boolean {
 
 export function layoutKeyToKeycode(
   key: string,
-  layout: MonkeyTypes.Layout
+  layout: Layout
 ): string | undefined {
   const rows: string[][] = Object.values(layout.keys);
 

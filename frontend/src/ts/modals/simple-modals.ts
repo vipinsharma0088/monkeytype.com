@@ -34,6 +34,7 @@ import AnimatedModal, {
 import { format as dateFormat } from "date-fns/format";
 import { Attributes, buildTag } from "../utils/tag-builder";
 import { CustomThemeColors } from "@monkeytype/contracts/schemas/configs";
+import { AddNotificationOptions } from "../types/types";
 
 type CommonInput<TType, TValue> = {
   type: TType;
@@ -94,7 +95,7 @@ type ExecReturn = {
   status: 1 | 0 | -1;
   message: string;
   showNotification?: false;
-  notificationOptions?: MonkeyTypes.AddNotificationOptions;
+  notificationOptions?: AddNotificationOptions;
   hideOptions?: HideOptions;
   afterHide?: () => void;
 };

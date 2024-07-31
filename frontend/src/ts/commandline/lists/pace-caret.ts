@@ -1,8 +1,9 @@
 import Config, * as UpdateConfig from "../../config";
 import * as TestLogic from "../../test/test-logic";
+import { Command, CommandsSubgroup } from "../../types/command";
 import { get as getTypingSpeedUnit } from "../../utils/typing-speed-units";
 
-const subgroup: MonkeyTypes.CommandsSubgroup = {
+const subgroup: CommandsSubgroup = {
   title: "Pace caret mode...",
   configKey: "paceCaret",
   list: [
@@ -69,7 +70,7 @@ const subgroup: MonkeyTypes.CommandsSubgroup = {
   ],
 };
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "changePaceCaret",
     display: "Pace caret mode...",

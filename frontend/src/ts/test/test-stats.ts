@@ -8,6 +8,7 @@ import * as TestState from "./test-state";
 import * as Numbers from "../utils/numbers";
 import { IncompleteTest, Result } from "@monkeytype/shared-types";
 import { Mode } from "@monkeytype/contracts/schemas/shared";
+import { WpmAndRaw } from "../types/types";
 
 type CharCount = {
   spaces: number;
@@ -140,9 +141,7 @@ export function calculateTestSeconds(now?: number): number {
   }
 }
 
-export function calculateWpmAndRaw(
-  withDecimalPoints?: true
-): MonkeyTypes.WpmAndRaw {
+export function calculateWpmAndRaw(withDecimalPoints?: true): WpmAndRaw {
   const testSeconds = calculateTestSeconds(
     TestState.isActive ? performance.now() : end
   );

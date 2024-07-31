@@ -1,6 +1,7 @@
+import { Snapshot } from "../types/types";
 import defaultConfig from "./default-config";
 
-export const defaultSnap: MonkeyTypes.Snapshot = {
+export const defaultSnap: Snapshot = {
   results: undefined,
   personalBests: {
     time: {},

@@ -1,6 +1,7 @@
 import Config, * as UpdateConfig from "../../config";
+import { Command } from "../../types/command";
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "changeKeymapSize",
     display: "Keymap size...",

@@ -44,6 +44,7 @@ import {
 import * as ConnectionState from "../states/connection";
 import { navigate } from "./route-controller";
 import { getHtmlByUserFlags } from "./user-flag-controller";
+import { Snapshot } from "../types/types";
 
 let signedOutThisSession = false;
 
@@ -118,7 +119,7 @@ async function getDataAndInit(): Promise<boolean> {
     LoadingPage.updateBar(45);
   }
   LoadingPage.updateText("Applying settings...");
-  const snapshot = DB.getSnapshot() as MonkeyTypes.Snapshot;
+  const snapshot = DB.getSnapshot() as Snapshot;
   $("nav .textButton.account > .text").text(snapshot.name);
   $("nav .textButton.account > .text").append(
     getHtmlByUserFlags(snapshot, { iconsOnly: true })
@@ -191,7 +192,7 @@ export async function loadUser(user: UserType): Promise<void> {
     signOut();
   }
   const { discordId, discordAvatar, xp, inboxUnreadSize } =
-    DB.getSnapshot() as MonkeyTypes.Snapshot;
+    DB.getSnapshot() as Snapshot;
   void AccountButton.update(xp, discordId, discordAvatar);
   Alerts.setNotificationBubbleVisible(inboxUnreadSize > 0);
   // var displayName = user.displayName;

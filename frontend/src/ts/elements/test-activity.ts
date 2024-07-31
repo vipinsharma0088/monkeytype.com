@@ -5,11 +5,12 @@ import type { DataObjectPartial } from "slim-select/dist/store";
 import { getTestActivityCalendar } from "../db";
 import * as ServerConfiguration from "../ape/server-configuration";
 import * as DB from "../db";
+import { TestActivityCalendar, TestActivityMonth } from "../types/types";
 
 let yearSelector: SlimSelect | undefined = undefined;
 
 export function init(
-  calendar?: MonkeyTypes.TestActivityCalendar,
+  calendar?: TestActivityCalendar,
   userSignUpDate?: Date
 ): void {
   if (calendar === undefined) {
@@ -23,7 +24,7 @@ export function init(
   update(calendar);
 }
 
-function update(calendar?: MonkeyTypes.TestActivityCalendar): void {
+function update(calendar?: TestActivityCalendar): void {
   const container = document.querySelector("#testActivity .activity");
 
   if (container === null) {
@@ -89,7 +90,7 @@ export function initYearSelector(
   years.length > 1 ? yearSelect.enable() : yearSelect.disable();
 }
 
-function updateMonths(months: MonkeyTypes.TestActivityMonth[]): void {
+function updateMonths(months: TestActivityMonth[]): void {
   const element = document.querySelector("#testActivity .months") as Element;
 
   element.innerHTML = months

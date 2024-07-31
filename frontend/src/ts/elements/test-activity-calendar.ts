@@ -19,8 +19,13 @@ import {
   subWeeks,
   Interval,
 } from "date-fns";
+import {
+  TestActivityDay,
+  TestActivityMonth,
+  TestActivityCalendar as TestActivityCalendarType,
+} from "../types/types";
 
-export class TestActivityCalendar implements MonkeyTypes.TestActivityCalendar {
+export class TestActivityCalendar implements TestActivityCalendarType {
   protected data: (number | null | undefined)[];
   protected startDay: Date;
   protected endDay: Date;
@@ -69,12 +74,12 @@ export class TestActivityCalendar implements MonkeyTypes.TestActivityCalendar {
     return values.slice(offset);
   }
 
-  getMonths(): MonkeyTypes.TestActivityMonth[] {
+  getMonths(): TestActivityMonth[] {
     const months: Date[] = eachMonthOfInterval({
       start: this.startDay,
       end: this.endDay,
     });
-    const results: MonkeyTypes.TestActivityMonth[] = [];
+    const results: TestActivityMonth[] = [];
 
     for (let i = 0; i < months.length; i++) {
       const month: Date = months[i] as Date;
@@ -101,8 +106,8 @@ export class TestActivityCalendar implements MonkeyTypes.TestActivityCalendar {
     return results;
   }
 
-  getDays(): MonkeyTypes.TestActivityDay[] {
-    const result: MonkeyTypes.TestActivityDay[] = [];
+  getDays(): TestActivityDay[] {
+    const result: TestActivityDay[] = [];
     const buckets = this.getBuckets();
     const getValue = (v: number | null | undefined): string => {
       if (v === undefined) return "0";
@@ -174,7 +179,7 @@ export class TestActivityCalendar implements MonkeyTypes.TestActivityCalendar {
 
 export class ModifiableTestActivityCalendar
   extends TestActivityCalendar
-  implements MonkeyTypes.ModifiableTestActivityCalendar
+  implements ModifiableTestActivityCalendar
 {
   private lastDay: Date;
 
@@ -207,7 +212,7 @@ export class ModifiableTestActivityCalendar
     this.data = this.buildData(this.data, this.lastDay);
   }
 
-  getFullYearCalendar(): MonkeyTypes.TestActivityCalendar {
+  getFullYearCalendar(): TestActivityCalendar {
     const today = new Date();
     if (this.lastDay.getFullYear() !== new UTCDateMini(today).getFullYear()) {
       return new TestActivityCalendar([], today, true);

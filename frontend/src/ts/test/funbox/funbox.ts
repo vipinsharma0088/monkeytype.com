@@ -28,6 +28,7 @@ import * as LayoutfluidFunboxTimer from "./layoutfluid-funbox-timer";
 import * as DDR from "../../utils/ddr";
 import { HighlightMode } from "@monkeytype/contracts/schemas/configs";
 import { Mode } from "@monkeytype/contracts/schemas/shared";
+import { FunboxWordsFrequency } from "../../types/types";
 
 const prefixSize = 2;
 
@@ -504,7 +505,7 @@ FunboxList.setFunboxFunctions("binary", {
 });
 
 FunboxList.setFunboxFunctions("zipf", {
-  getWordsFrequencyMode(): MonkeyTypes.FunboxWordsFrequency {
+  getWordsFrequencyMode(): FunboxWordsFrequency {
     return "zipf";
   },
 });

@@ -4,6 +4,7 @@ import * as Numbers from "../utils/numbers";
 import * as BannerEvent from "../observables/banner-event";
 // import * as Alerts from "./alerts";
 import * as NotificationEvent from "../observables/notification-event";
+import { AddNotificationOptions } from "../types/types";
 
 function updateMargin(): void {
   const height = $("#bannerCenter").height() as number;
@@ -269,7 +270,7 @@ function updateClearAllButton(): void {
 export function add(
   message: string,
   level = 0,
-  options: MonkeyTypes.AddNotificationOptions = {}
+  options: AddNotificationOptions = {}
 ): void {
   NotificationEvent.dispatch(message, level, options.customTitle);
 

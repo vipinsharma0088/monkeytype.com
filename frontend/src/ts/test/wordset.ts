@@ -2,10 +2,11 @@ import * as FunboxList from "./funbox/funbox-list";
 import { zipfyRandomArrayIndex } from "../utils/misc";
 import { randomElementFromArray, shuffle } from "../utils/arrays";
 import Config from "../config";
+import { FunboxWordsFrequency } from "../types/types";
 
-let currentWordset: MonkeyTypes.Wordset | null = null;
+let currentWordset: Wordset | null = null;
 
-export class Wordset implements MonkeyTypes.Wordset {
+export class Wordset {
   words: string[];
   length: number;
   orderedIndex: number;
@@ -23,7 +24,7 @@ export class Wordset implements MonkeyTypes.Wordset {
     this.shuffledIndexes = [];
   }
 
-  randomWord(mode: MonkeyTypes.FunboxWordsFrequency): string {
+  randomWord(mode: FunboxWordsFrequency): string {
     if (mode === "zipf") {
       return this.words[zipfyRandomArrayIndex(this.words.length)] as string;
     } else {
@@ -54,7 +55,7 @@ export class Wordset implements MonkeyTypes.Wordset {
   }
 }
 
-export async function withWords(words: string[]): Promise<MonkeyTypes.Wordset> {
+export async function withWords(words: string[]): Promise<Wordset> {
   const wordFunbox = FunboxList.get(Config.funbox).find(
     (f) => f.functions?.withWords
   );

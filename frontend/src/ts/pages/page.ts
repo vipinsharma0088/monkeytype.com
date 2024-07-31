@@ -1,10 +1,12 @@
+import { PageName } from "../types/types";
+
 type Options<T> = {
   params?: Record<string, string>;
   data?: T;
 };
 
 type PageProperties<T> = {
-  name: MonkeyTypes.PageName;
+  name: PageName;
   element: JQuery;
   path: string;
   beforeHide?: () => Promise<void>;
@@ -17,7 +19,7 @@ async function empty(): Promise<void> {
   return;
 }
 export default class Page<T> {
-  public name: MonkeyTypes.PageName;
+  public name: PageName;
   public element: JQuery;
   public pathname: string;
   public beforeHide: () => Promise<void>;

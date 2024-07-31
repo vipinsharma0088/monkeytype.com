@@ -1,8 +1,10 @@
 import * as UpdateConfig from "../../config";
 import * as TestLogic from "../../test/test-logic";
+import { Command, CommandsSubgroup } from "../../types/command";
+import { Layouts } from "../../types/types";
 import { capitalizeFirstLetterOfEachWord } from "../../utils/strings";
 
-const subgroup: MonkeyTypes.CommandsSubgroup = {
+const subgroup: CommandsSubgroup = {
   title: "Change keymap layout...",
   configKey: "keymapLayout",
   list: [
@@ -13,7 +15,7 @@ const subgroup: MonkeyTypes.CommandsSubgroup = {
   ],
 };
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "changeKeymapLayout",
     display: "Keymap layout...",
@@ -23,7 +25,7 @@ const commands: MonkeyTypes.Command[] = [
   },
 ];
 
-function update(layouts: MonkeyTypes.Layouts): void {
+function update(layouts: Layouts): void {
   subgroup.list = [];
   subgroup.list.push({
     id: "changeKeymapLayoutOverrideSync",

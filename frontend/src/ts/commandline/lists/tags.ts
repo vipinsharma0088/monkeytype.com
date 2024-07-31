@@ -6,8 +6,9 @@ import Config from "../../config";
 import * as PaceCaret from "../../test/pace-caret";
 import { isAuthenticated } from "../../firebase";
 import AnimatedModal from "../../utils/animated-modal";
+import { Command, CommandsSubgroup } from "../../types/command";
 
-const subgroup: MonkeyTypes.CommandsSubgroup = {
+const subgroup: CommandsSubgroup = {
   title: "Change tags...",
   list: [],
   beforeList: (): void => {
@@ -15,7 +16,7 @@ const subgroup: MonkeyTypes.CommandsSubgroup = {
   },
 };
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "changeTags",
     display: "Tags...",
@@ -41,12 +42,7 @@ function update(): void {
       icon: "fa-plus",
       shouldFocusTestUI: false,
       exec: ({ commandlineModal }): void => {
-        EditTagsPopup.show(
-          "add",
-          undefined,
-          undefined,
-          commandlineModal as AnimatedModal
-        );
+        EditTagsPopup.show("add", undefined, undefined, commandlineModal);
       },
     });
     return;

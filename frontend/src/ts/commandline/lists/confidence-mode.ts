@@ -1,6 +1,7 @@
 import * as UpdateConfig from "../../config";
+import { Command } from "../../types/command";
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "changeConfidenceMode",
     display: "Confidence mode...",

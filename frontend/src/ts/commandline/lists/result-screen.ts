@@ -5,8 +5,9 @@ import * as Notifications from "../../elements/notifications";
 import * as TestInput from "../../test/test-input";
 import * as TestWords from "../../test/test-words";
 import Config from "../../config";
+import { Command } from "../../types/command";
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "nextTest",
     display: "Next test",

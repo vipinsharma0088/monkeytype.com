@@ -9,9 +9,10 @@ import { removeLanguageSize } from "../utils/strings";
 import SlimSelect from "slim-select";
 import AnimatedModal, { ShowOptions } from "../utils/animated-modal";
 import { CharacterCounter } from "../elements/character-counter";
+import { Quote } from "../types/types";
 
 type State = {
-  quoteToReport?: MonkeyTypes.Quote;
+  quoteToReport?: Quote;
   reasonSelect?: SlimSelect | undefined;
 };
 

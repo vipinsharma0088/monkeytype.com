@@ -9,13 +9,15 @@ import { lastElementFromArray } from "./utils/arrays";
 import { getFunboxList } from "./utils/json-data";
 import { mergeWithDefaultConfig } from "./utils/config";
 import * as Dates from "date-fns";
-import {
-  TestActivityCalendar,
-  ModifiableTestActivityCalendar,
-} from "./elements/test-activity-calendar";
 import * as Loader from "./elements/loader";
 
-import { Badge, DBResult, Result } from "@monkeytype/shared-types";
+import {
+  Badge,
+  CustomTheme,
+  DBResult,
+  Result,
+  UserTag,
+} from "@monkeytype/shared-types";
 import { Config, Difficulty } from "@monkeytype/contracts/schemas/configs";
 import {
   Mode,
@@ -23,16 +25,24 @@ import {
   PersonalBest,
   PersonalBests,
 } from "@monkeytype/contracts/schemas/shared";
+import {
+  RawCustomTheme,
+  Snapshot,
+  SnapshotPreset,
+  TestActivityCalendar as TestActivityCalendarType,
+} from "./types/types";
+import {
+  TestActivityCalendar,
+  ModifiableTestActivityCalendar,
+} from "./elements/test-activity-calendar";
 
-let dbSnapshot: MonkeyTypes.Snapshot | undefined;
+let dbSnapshot: Snapshot | undefined;
 
-export function getSnapshot(): MonkeyTypes.Snapshot | undefined {
+export function getSnapshot(): Snapshot | undefined {
   return dbSnapshot;
 }
 
-export function setSnapshot(
-  newSnapshot: MonkeyTypes.Snapshot | undefined
-): void {
+export function setSnapshot(newSnapshot: Snapshot | undefined): void {
   const originalBanned = dbSnapshot?.banned;
   const originalVerified = dbSnapshot?.verified;
   const lbOptOut = dbSnapshot?.lbOptOut;
@@ -55,9 +65,7 @@ export function setSnapshot(
   }
 }
 
-export async function initSnapshot(): Promise<
-  MonkeyTypes.Snapshot | number | boolean
-> {
+export async function initSnapshot(): Promise<Snapshot | number | boolean> {
   //send api request with token that returns tags, presets, and data needed for snap
   const snap = { ...defaultSnap };
   try {
@@ -190,7 +198,7 @@ export async function initSnapshot(): Promise<
     // LoadingPage.updateText("Downloading tags...");
     snap.customThemes = userData.customThemes ?? [];
 
-    // const userDataTags: MonkeyTypes.UserTagWithDisplay[] = userData.tags ?? [];
+    // const userDataTags: UserTagWithDisplay[] = userData.tags ?? [];
 
     // userDataTags.forEach((tag) => {
     //   tag.display = tag.name.replaceAll("_", " ");
@@ -238,7 +246,7 @@ export async function initSnapshot(): Promise<
           ...preset,
           display: preset.name.replace(/_/gi, " "),
         };
-      }) as MonkeyTypes.SnapshotPreset[];
+      }) as SnapshotPreset[];
       snap.presets = presetsWithDisplay;
 
       snap.presets = snap.presets?.sort((a, b) => {
@@ -333,15 +341,11 @@ export async function getUserResults(offset?: number): Promise<boolean> {
   return true;
 }
 
-function _getCustomThemeById(
-  themeID: string
-): MonkeyTypes.CustomTheme | undefined {
+function _getCustomThemeById(themeID: string): CustomTheme | undefined {
   return dbSnapshot?.customThemes?.find((t) => t._id === themeID);
 }
 
-export async function addCustomTheme(
-  theme: MonkeyTypes.RawCustomTheme
-): Promise<boolean> {
+export async function addCustomTheme(theme: RawCustomTheme): Promise<boolean> {
   if (!dbSnapshot) return false;
 
   if (dbSnapshot.customThemes === undefined) {
@@ -364,7 +368,7 @@ export async function addCustomTheme(
     return false;
   }
 
-  const newCustomTheme: MonkeyTypes.CustomTheme = {
+  const newCustomTheme: CustomTheme = {
     ...theme,
     _id: response.data._id,
   };
@@ -375,7 +379,7 @@ export async function addCustomTheme(
 
 export async function editCustomTheme(
   themeId: string,
-  newTheme: MonkeyTypes.RawCustomTheme
+  newTheme: RawCustomTheme
 ): Promise<boolean> {
   if (!isAuthenticated()) return false;
   if (!dbSnapshot) return false;
@@ -399,7 +403,7 @@ export async function editCustomTheme(
     return false;
   }
 
-  const newCustomTheme: MonkeyTypes.CustomTheme = {
+  const newCustomTheme: CustomTheme = {
     ...newTheme,
     _id: themeId,
   };
@@ -762,7 +766,7 @@ export async function saveLocalTagPB<M extends Mode>(
   function cont(): void {
     const filteredtag = dbSnapshot?.tags?.filter(
       (t) => t._id === tagId
-    )[0] as MonkeyTypes.UserTag;
+    )[0] as UserTag;
 
     filteredtag.personalBests ??= {
       time: {},
@@ -984,7 +988,7 @@ export function setStreak(streak: number): void {
 
 export async function getTestActivityCalendar(
   yearString: string
-): Promise<MonkeyTypes.TestActivityCalendar | undefined> {
+): Promise<TestActivityCalendarType | undefined> {
   if (!isAuthenticated() || dbSnapshot === undefined) return undefined;
 
   if (yearString === "current") return dbSnapshot.testActivity;

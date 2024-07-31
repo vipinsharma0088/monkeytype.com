@@ -5,8 +5,10 @@ import { isAuthenticated } from "../../firebase";
 import { createErrorMessage } from "../../utils/misc";
 import * as Loader from "../../elements/loader";
 import * as TestWords from "../../test/test-words";
+import { Command } from "../../types/command";
+import { QuoteWithTextSplit } from "../../types/types";
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "addQuoteToFavorite",
     display: "Add current quote to favorite",
@@ -24,7 +26,7 @@ const commands: MonkeyTypes.Command[] = [
       try {
         Loader.show();
         await QuotesController.setQuoteFavorite(
-          TestWords.currentQuote as MonkeyTypes.QuoteWithTextSplit,
+          TestWords.currentQuote as QuoteWithTextSplit,
           true
         );
         Loader.hide();
@@ -56,7 +58,7 @@ const commands: MonkeyTypes.Command[] = [
       try {
         Loader.show();
         await QuotesController.setQuoteFavorite(
-          TestWords.currentQuote as MonkeyTypes.QuoteWithTextSplit,
+          TestWords.currentQuote as QuoteWithTextSplit,
           false
         );
         Loader.hide();

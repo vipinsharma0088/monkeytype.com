@@ -67,6 +67,12 @@ import * as DateTime from "../utils/date-and-time";
 import * as Arrays from "../utils/arrays";
 import * as Numbers from "../utils/numbers";
 import { blendTwoHexColors } from "../utils/colors";
+import {
+  AccChartData,
+  ActivityChartDataPoint,
+  HistoryChartData,
+  OtherChartData,
+} from "../types/types";
 
 class ChartWithUpdateColors<
   TType extends ChartType = ChartType,
@@ -271,9 +277,7 @@ export let accountHistoryActiveIndex: number;
 
 export const accountHistory = new ChartWithUpdateColors<
   "line",
-  | MonkeyTypes.HistoryChartData[]
-  | MonkeyTypes.AccChartData[]
-  | MonkeyTypes.OtherChartData[],
+  HistoryChartData[] | AccChartData[] | OtherChartData[],
   string,
   | "wpm"
   | "pb"
@@ -500,14 +504,14 @@ export const accountHistory = new ChartWithUpdateColors<
               if (tooltipItem.datasetIndex !== 0) {
                 const resultData = tooltipItem.dataset.data[
                   tooltipItem.dataIndex
-                ] as MonkeyTypes.AccChartData;
+                ] as AccChartData;
                 return `error rate: ${Numbers.roundTo2(
                   resultData.errorRate
                 )}%\nacc: ${Numbers.roundTo2(100 - resultData.errorRate)}%`;
               }
               const resultData = tooltipItem.dataset.data[
                 tooltipItem.dataIndex
-              ] as MonkeyTypes.HistoryChartData;
+              ] as HistoryChartData;
               let label =
                 `${Config.typingSpeedUnit}: ${resultData.wpm}` +
                 "\n" +
@@ -559,7 +563,7 @@ export const accountHistory = new ChartWithUpdateColors<
 
 export const accountActivity = new ChartWithUpdateColors<
   "bar" | "line",
-  MonkeyTypes.ActivityChartDataPoint[],
+  ActivityChartDataPoint[],
   string,
   "count" | "avgWpm"
 >(
@@ -670,13 +674,13 @@ export const accountActivity = new ChartWithUpdateColors<
               const firstItem = tooltipItem[0] as TooltipItem<"bar" | "line">;
               const resultData = firstItem.dataset.data[
                 firstItem.dataIndex
-              ] as MonkeyTypes.ActivityChartDataPoint;
+              ] as ActivityChartDataPoint;
               return format(new Date(resultData.x), "dd MMM yyyy");
             },
             beforeLabel: function (tooltipItem): string {
               const resultData = tooltipItem.dataset.data[
                 tooltipItem.dataIndex
-              ] as MonkeyTypes.ActivityChartDataPoint;
+              ] as ActivityChartDataPoint;
               switch (tooltipItem.datasetIndex) {
                 case 0:
                   return `Time Typing: ${DateTime.secondsToString(
@@ -704,7 +708,7 @@ export const accountActivity = new ChartWithUpdateColors<
 
 export const accountHistogram = new ChartWithUpdateColors<
   "bar",
-  MonkeyTypes.ActivityChartDataPoint[],
+  ActivityChartDataPoint[],
   string,
   "count"
 >(
@@ -773,13 +777,13 @@ export const accountHistogram = new ChartWithUpdateColors<
           //   title: function (tooltipItem): string {
           //     const resultData = tooltipItem[0].dataset.data[
           //       tooltipItem[0].dataIndex
-          //     ] as MonkeyTypes.ActivityChartDataPoint;
+          //     ] as ActivityChartDataPoint;
           //     return format(new Date(resultData.x), "dd MMM yyyy");
           //   },
           //   beforeLabel: function (tooltipItem): string {
           //     const resultData = tooltipItem.dataset.data[
           //       tooltipItem.dataIndex
-          //     ] as MonkeyTypes.ActivityChartDataPoint;
+          //     ] as ActivityChartDataPoint;
           //     switch (tooltipItem.datasetIndex) {
           //       case 0:
           //         return `Time Typing: ${DateTime.secondsToString(
@@ -807,7 +811,7 @@ export const accountHistogram = new ChartWithUpdateColors<
 
 export const globalSpeedHistogram = new ChartWithUpdateColors<
   "bar",
-  MonkeyTypes.ActivityChartDataPoint[],
+  ActivityChartDataPoint[],
   string,
   "count"
 >(
@@ -1105,9 +1109,9 @@ function updateAverage100(updateChart = true): void {
 async function updateColors<
   TType extends ChartType = "bar" | "line" | "scatter",
   TData =
-    | MonkeyTypes.HistoryChartData[]
-    | MonkeyTypes.AccChartData[]
-    | MonkeyTypes.ActivityChartDataPoint[]
+    | HistoryChartData[]
+    | AccChartData[]
+    | ActivityChartDataPoint[]
     | number[],
   TLabel = string
 >(chart: ChartWithUpdateColors<TType, TData, TLabel>): Promise<void> {

@@ -21,6 +21,11 @@ import * as ConfigSchemas from "@monkeytype/contracts/schemas/configs";
 import { Config } from "@monkeytype/contracts/schemas/configs";
 import { roundTo1 } from "./utils/numbers";
 import { Mode, ModeSchema } from "@monkeytype/contracts/schemas/shared";
+import {
+  ConfigChanges,
+  CustomLayoutFluidSpaces,
+  PresetConfig,
+} from "./types/types";
 
 export let localStorageConfig: Config;
 
@@ -1864,7 +1869,7 @@ export function setCustomBackground(
 }
 
 export async function setCustomLayoutfluid(
-  value: MonkeyTypes.CustomLayoutFluidSpaces,
+  value: CustomLayoutFluidSpaces,
   nosave?: boolean
 ): Promise<boolean> {
   const trimmed = value.trim();
@@ -1965,7 +1970,7 @@ export function setBurstHeatmap(value: boolean, nosave?: boolean): boolean {
 }
 
 export async function apply(
-  configToApply: Config | MonkeyTypes.ConfigChanges
+  configToApply: Config | ConfigChanges
 ): Promise<void> {
   if (configToApply === undefined) return;
 
@@ -2111,8 +2116,8 @@ export async function loadFromLocalStorage(): Promise<void> {
 }
 
 function replaceLegacyValues(
-  configToApply: ConfigSchemas.PartialConfig | MonkeyTypes.ConfigChanges
-): ConfigSchemas.Config | MonkeyTypes.ConfigChanges {
+  configToApply: ConfigSchemas.PartialConfig | ConfigChanges
+): ConfigSchemas.Config | ConfigChanges {
   const configObj = configToApply as ConfigSchemas.Config;
 
   //@ts-expect-error
@@ -2178,8 +2183,8 @@ function replaceLegacyValues(
   return configObj;
 }
 
-export function getConfigChanges(): MonkeyTypes.PresetConfig {
-  const configChanges = {} as MonkeyTypes.PresetConfig;
+export function getConfigChanges(): PresetConfig {
+  const configChanges = {} as PresetConfig;
   (Object.keys(config) as (keyof Config)[])
     .filter((key) => {
       return config[key] !== DefaultConfig[key];

@@ -9,6 +9,7 @@ import {
   Mode2,
   PersonalBests,
 } from "@monkeytype/contracts/schemas/shared";
+import { Quote } from "../types/types";
 
 export function kogasa(cov: number): number {
   return (
@@ -384,7 +385,7 @@ export async function swapElements(
 
 export function getMode2<M extends keyof PersonalBests>(
   config: Config,
-  randomQuote: MonkeyTypes.Quote | null
+  randomQuote: Quote | null
 ): Mode2<M> {
   const mode = config.mode;
   let retVal: string;

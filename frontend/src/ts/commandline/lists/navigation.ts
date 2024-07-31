@@ -1,7 +1,8 @@
 import { navigate } from "../../controllers/route-controller";
+import { Command } from "../../types/command";
 import { toggleFullscreen } from "../../utils/misc";
 
-const commands: MonkeyTypes.Command[] = [
+const commands: Command[] = [
   {
     id: "viewTypingPage",
     display: "View Typing Page",

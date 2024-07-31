@@ -38,6 +38,7 @@ import type { AnnotationOptions } from "chartjs-plugin-annotation";
 import Ape from "../ape";
 import { Result } from "@monkeytype/shared-types";
 import { Mode } from "@monkeytype/contracts/schemas/shared";
+import { Quote, UserTag } from "../types/types";
 
 let result: Result<Mode>;
 let maxChartVal: number;
@@ -528,7 +529,7 @@ export function showConfetti(): void {
 }
 
 async function updateTags(dontSave: boolean): Promise<void> {
-  const activeTags: MonkeyTypes.UserTag[] = [];
+  const activeTags: UserTag[] = [];
   const userTagsCount = DB.getSnapshot()?.tags?.length ?? 0;
   try {
     DB.getSnapshot()?.tags?.forEach((tag) => {
@@ -644,7 +645,7 @@ async function updateTags(dontSave: boolean): Promise<void> {
   });
 }
 
-function updateTestType(randomQuote: MonkeyTypes.Quote | null): void {
+function updateTestType(randomQuote: Quote | null): void {
   let testType = "";
 
   testType += Config.mode;
@@ -751,7 +752,7 @@ function updateOther(
   }
 }
 
-export function updateRateQuote(randomQuote: MonkeyTypes.Quote | null): void {
+export function updateRateQuote(randomQuote: Quote | null): void {
   if (Config.mode === "quote") {
     if (randomQuote === null) {
       console.error(
@@ -784,7 +785,7 @@ export function updateRateQuote(randomQuote: MonkeyTypes.Quote | null): void {
   }
 }
 
-function updateQuoteFavorite(randomQuote: MonkeyTypes.Quote | null): void {
+function updateQuoteFavorite(randomQuote: Quote | null): void {
   const icon = $(".pageTest #result #favoriteQuoteButton .icon");
 
   if (Config.mode !== "quote" || !isAuthenticated()) {
@@ -807,7 +808,7 @@ function updateQuoteFavorite(randomQuote: MonkeyTypes.Quote | null): void {
   icon.parent().removeClass("hidden");
 }
 
-function updateQuoteSource(randomQuote: MonkeyTypes.Quote | null): void {
+function updateQuoteSource(randomQuote: Quote | null): void {
   if (Config.mode === "quote") {
     $("#result .stats .source").removeClass("hidden");
     $("#result .stats .source .bottom").html(
@@ -825,7 +826,7 @@ export async function update(
   afkDetected: boolean,
   isRepeated: boolean,
   tooShort: boolean,
-  randomQuote: MonkeyTypes.Quote | null,
+  randomQuote: Quote | null,
   dontSave: boolean
 ): Promise<void> {
   resultAnnotation = [];

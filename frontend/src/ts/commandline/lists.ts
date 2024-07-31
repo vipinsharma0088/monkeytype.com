@@ -103,6 +103,7 @@ import * as ShareTestSettingsPopup from "../modals/share-test-settings";
 import * as TestStats from "../test/test-stats";
 import * as QuoteSearchModal from "../modals/quote-search";
 import * as FPSCounter from "../elements/fps-counter";
+import { Command, CommandsSubgroup } from "../types/command";
 
 const layoutsPromise = JSONData.getLayoutsList();
 layoutsPromise
@@ -176,7 +177,7 @@ challengesPromise
     );
   });
 
-export const commands: MonkeyTypes.CommandsSubgroup = {
+export const commands: CommandsSubgroup = {
   title: "",
   list: [
     //result
@@ -505,7 +506,7 @@ export function doesListExist(listName: string): boolean {
 
 export async function getList(
   listName: ListsObjectKeys
-): Promise<MonkeyTypes.CommandsSubgroup> {
+): Promise<CommandsSubgroup> {
   await Promise.allSettled([
     layoutsPromise,
     languagesPromise,
@@ -522,7 +523,7 @@ export async function getList(
   return list;
 }
 
-let stack: MonkeyTypes.CommandsSubgroup[] = [];
+let stack: CommandsSubgroup[] = [];
 
 stack = [commands];
 
@@ -536,11 +537,11 @@ export function setStackToDefault(): void {
   setStack([commands]);
 }
 
-export function setStack(val: MonkeyTypes.CommandsSubgroup[]): void {
+export function setStack(val: CommandsSubgroup[]): void {
   stack = val;
 }
 
-export function pushToStack(val: MonkeyTypes.CommandsSubgroup): void {
+export function pushToStack(val: CommandsSubgroup): void {
   stack.push(val);
 }
 
@@ -548,12 +549,12 @@ export function popFromStack(): void {
   stack.pop();
 }
 
-export function getTopOfStack(): MonkeyTypes.CommandsSubgroup {
-  return stack[stack.length - 1] as MonkeyTypes.CommandsSubgroup;
+export function getTopOfStack(): CommandsSubgroup {
+  return stack[stack.length - 1] as CommandsSubgroup;
 }
 
-let singleList: MonkeyTypes.CommandsSubgroup | undefined;
-export async function getSingleSubgroup(): Promise<MonkeyTypes.CommandsSubgroup> {
+let singleList: CommandsSubgroup | undefined;
+export async function getSingleSubgroup(): Promise<CommandsSubgroup> {
   await Promise.allSettled([
     layoutsPromise,
     languagesPromise,
@@ -563,7 +564,7 @@ export async function getSingleSubgroup(): Promise<MonkeyTypes.CommandsSubgroup>
     challengesPromise,
   ]);
 
-  const singleCommands: MonkeyTypes.Command[] = [];
+  const singleCommands: Command[] = [];
   for (const command of commands.list) {
     const ret = buildSingleListCommands(command);
     singleCommands.push(...ret);
@@ -577,10 +578,10 @@ export async function getSingleSubgroup(): Promise<MonkeyTypes.CommandsSubgroup>
 }
 
 function buildSingleListCommands(
-  command: MonkeyTypes.Command,
-  parentCommand?: MonkeyTypes.Command
-): MonkeyTypes.Command[] {
-  const commands: MonkeyTypes.Command[] = [];
+  command: Command,
+  parentCommand?: Command
+): Command[] {
+  const commands: Command[] = [];
   if (command.subgroup) {
     if (command.subgroup.beforeList) {
       command.subgroup.beforeList();
@@ -611,7 +612,7 @@ function buildSingleListCommands(
 
       let newAlias: string | undefined = undefined;
 
-      if ((parentCommand.alias ?? "") || (command.alias ?? "")) {
+      if (parentCommand.alias != null || command.alias != null) {
         newAlias = [parentCommand.alias, command.alias]
           .filter(Boolean)
           .join(" ");
