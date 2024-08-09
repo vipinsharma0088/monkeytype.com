@@ -4,10 +4,11 @@ import { readFileSync, existsSync } from "fs";
 import MonkeyError from "../utils/error";
 import path from "path";
 import { isDevEnvironment } from "../utils/misc";
+import { STATIC_DIR } from "../constants/vite-define";
 
 const SERVICE_ACCOUNT_PATH = path.join(
-  __dirname,
-  "../../src/credentials/serviceAccountKey.json"
+  STATIC_DIR,
+  "credentials/serviceAccountKey.json"
 );
 
 export function init(): void {
@@ -35,7 +36,7 @@ export function init(): void {
         serviceAccount as unknown as ServiceAccount
       ),
     });
-    Logger.success("Firebase app initialized");
+    Logger.success(`Firebase app initialized using ${SERVICE_ACCOUNT_PATH}`);
   }
 }
 

@@ -3,16 +3,20 @@
   "version": "1.14.3",
   "license": "GPL-3.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\"",
-    "build": "npm run gen-docs && tsc --build",
+    "build-old": "npm run gen-docs && tsc --build",
+    "build": "vite build",
     "watch": "tsc --build --watch",
     "clean": "tsc --build --clean",
     "ts-check": "tsc --noEmit",
-    "start": "node ./dist/server.js",
+    "start-old": "node ./dist/server.js",
+    "start": "npm run build && node ./dist/index.cjs",
     "test": "vitest run",
     "test-coverage": "vitest run --coverage",
-    "dev": "concurrently \"tsx watch --clear-screen=false --inspect ./src/server.ts\" \"tsc --preserveWatchOutput --noEmit --watch\" \"npx eslint-watch \"./src/**/*.ts\"\"",
+    "dev-old": "concurrently \"tsx watch --clear-screen=false --inspect ./src/server.ts\" \"tsc --preserveWatchOutput --noEmit --watch\" \"npx eslint-watch \"./src/**/*.ts\"\"",
+    "dev": "vite-node -w src/index.ts",
     "knip": "knip",
     "docker-db-only": "docker compose -f docker/compose.db-only.yml up",
     "docker": "docker compose -f docker/compose.yml up",
@@ -62,6 +66,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
+    "@liuli-util/vite-plugin-node": "0.9.0",
     "@monkeytype/eslint-config": "workspace:*",
     "@monkeytype/shared-types": "workspace:*",
     "@monkeytype/typescript-config": "workspace:*",
@@ -95,6 +100,9 @@
     "supertest": "6.2.3",
     "tsx": "4.16.2",
     "typescript": "5.5.4",
+    "vite": "5.1.7",
+    "vite-node": "2.0.5",
+    "vite-plugin-static-copy": "1.0.6",
     "vitest": "1.6.0",
     "vitest-mongodb": "1.0.0"
   }

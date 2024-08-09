@@ -4,11 +4,12 @@ import { join } from "path";
 import IORedis from "ioredis";
 import Logger from "../utils/logger";
 import { isDevEnvironment } from "../utils/misc";
+import { STATIC_DIR } from "../constants/vite-define";
 
 let connection: IORedis.Redis;
 let connected = false;
 
-const REDIS_SCRIPTS_DIRECTORY_PATH = join(__dirname, "../../redis-scripts");
+const REDIS_SCRIPTS_DIRECTORY_PATH = join(STATIC_DIR, "redis-scripts");
 
 function loadScripts(client: IORedis.Redis): void {
   const scriptFiles = fs.readdirSync(REDIS_SCRIPTS_DIRECTORY_PATH);
@@ -21,6 +22,8 @@ function loadScripts(client: IORedis.Redis): void {
     client.defineCommand(scriptName, {
       lua: scriptSource,
     });
+
+    Logger.info("Loaded script: " + scriptName);
   });
 }
 

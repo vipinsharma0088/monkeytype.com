@@ -6,14 +6,17 @@ import { readFile } from "node:fs/promises";
 import * as db from "../init/db";
 import MonkeyError from "../utils/error";
 import { compareTwoStrings } from "string-similarity";
+import { BACKEND_DIR } from "../constants/vite-define";
+import Logger from "../utils/logger";
 
-const PATH_TO_REPO = "../../../../monkeytype-new-quotes";
+const PATH_TO_REPO = path.join(BACKEND_DIR, "../../monkeytype-new-quotes");
 
 let git;
 try {
-  git = simpleGit(path.join(__dirname, PATH_TO_REPO));
+  git = simpleGit(PATH_TO_REPO);
+  Logger.info(`Initialized new quotes git at ${PATH_TO_REPO}`);
 } catch (e) {
-  console.error(`Failed to initialize git: ${e}`);
+  Logger.error(`Failed to initialize new quotes git: ${e}`);
   git = undefined;
 }
 

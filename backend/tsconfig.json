@@ -2,6 +2,8 @@
   "extends": "@monkeytype/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "target": "ES6",
     "noImplicitAny": false,
     "strictFunctionTypes": false,
@@ -11,7 +13,7 @@
   "ts-node": {
     "files": true
   },
-  "files": ["./src/types/types.d.ts"],
+  "files": ["./src/types/types.d.ts", "vite.config.ts"],
   "include": ["./src/**/*"],
   "exclude": [
     "node_modules",

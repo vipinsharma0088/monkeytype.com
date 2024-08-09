@@ -5,8 +5,8 @@
     "types": ["vite/client", "node", "jquery"],
     "moduleResolution": "Bundler",
     "module": "ESNext",
-    "allowUmdGlobalAccess": true,
     "target": "ES6",
+    "allowUmdGlobalAccess": true,
     "noEmit": true
   },
   "include": [
