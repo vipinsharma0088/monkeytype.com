@@ -1,7 +1,8 @@
 import MonkeyError from "../utils/error";
-import type { Response, NextFunction, RequestHandler } from "express";
+import type { Response, NextFunction, RequestHandler, Request } from "express";
 import statuses from "../constants/monkey-status-codes";
-import rateLimit, {
+import {
+  rateLimit,
   type RateLimitRequestHandler,
   type Options,
 } from "express-rate-limit";
@@ -44,13 +45,10 @@ export function withApeRateLimiter(
   return (req: MonkeyTypes.Request, res: Response, next: NextFunction) => {
     if (req.ctx.decodedToken.type === "ApeKey") {
       const rateLimiter = apeRateLimiterOverride ?? apeRateLimiter;
-      // TODO: bump version?
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return rateLimiter(req, res, next);
+      rateLimiter(req, res, next);
+    } else {
+      defaultRateLimiter(req, res, next);
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return defaultRateLimiter(req, res, next);
   };
 }
 
@@ -61,12 +59,9 @@ export function withApeRateLimiter2<T extends AppRouter | AppRoute>(
   return (req: TsRestRequestWithCtx, res: Response, next: NextFunction) => {
     if (req.ctx.decodedToken.type === "ApeKey") {
       const rateLimiter = apeRateLimiterOverride ?? apeRateLimiter;
-      // TODO: bump version?
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return rateLimiter(req, res, next);
+      rateLimiter(req as Request, res, next);
+    } else {
+      defaultRateLimiter(req as Request, res, next);
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return defaultRateLimiter(req, res, next);
   };
 }

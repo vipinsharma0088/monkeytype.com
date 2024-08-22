@@ -1085,6 +1085,7 @@ export async function finish(difficultyFailed = false): Promise<void> {
   }
 
   // user is logged in
+
   TestStats.resetIncomplete();
 
   completedEvent.uid = Auth?.currentUser?.uid as string;
