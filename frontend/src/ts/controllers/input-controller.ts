@@ -1047,7 +1047,7 @@ $(document).on("keydown", async (event) => {
     }
   }
 
-  Monkey.type();
+  void Monkey.type(event);
 
   if (event.key === "Backspace" && TestInput.input.current.length === 0) {
     backspaceToPrevious();
@@ -1229,7 +1229,7 @@ $("#wordsInput").on("keyup", (event) => {
   }, 0);
 });
 
-$("#wordsInput").on("keyup", (event) => {
+$("#wordsInput").on("keyup", async (event) => {
   if (!event.originalEvent?.isTrusted || TestUI.testRestarting) {
     event.preventDefault();
     return;
@@ -1238,7 +1238,8 @@ $("#wordsInput").on("keyup", (event) => {
   if (IgnoredKeys.includes(event.key)) return;
 
   if (TestUI.resultVisible) return;
-  Monkey.stop();
+
+  void Monkey.stop(event);
 });
 
 $("#wordsInput").on("beforeinput", (event) => {

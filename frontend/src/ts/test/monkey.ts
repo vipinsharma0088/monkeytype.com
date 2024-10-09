@@ -2,6 +2,56 @@ import { mapRange } from "@monkeytype/util/numbers";
 import Config from "../config";
 import * as ConfigEvent from "../observables/config-event";
 import * as TestState from "../test/test-state";
+import * as JSONData from "../utils/json-data";
+import * as LayoutEmulator from "../test/layout-emulator";
+
+class HandMap {
+  private leftHandSet: Set<string>;
+  private rightHandSet: Set<string>;
+
+  constructor() {
+    this.leftHandSet = new Set();
+    this.rightHandSet = new Set();
+    void this.update(Config.layout);
+  }
+
+  async update(layoutName: string): Promise<void> {
+    if (layoutName === "default") {
+      layoutName = "qwerty";
+    }
+    const layout = await JSONData.getLayout(layoutName).catch(() => undefined);
+    if (layout === undefined) {
+      throw new Error(`Failed to load layout: ${layoutName}`);
+    }
+
+    this.leftHandSet.clear();
+    this.rightHandSet.clear();
+
+    Object.values(layout.keys).forEach((rowArray) => {
+      const midpoint = Math.floor(rowArray.length / 2);
+      rowArray.forEach((keyString, index) => {
+        const targetSet =
+          index < midpoint ? this.leftHandSet : this.rightHandSet;
+        if (keyString.length === 1) {
+          targetSet.add(keyString);
+        } else if (keyString.length === 2) {
+          targetSet.add(keyString.charAt(0));
+          targetSet.add(keyString.charAt(1));
+        } else {
+          console.error(`Unexpected key format: ${keyString}`);
+        }
+      });
+    });
+  }
+
+  getHand(key: string): "left" | "right" | "unknown" {
+    if (this.leftHandSet.has(key)) return "left";
+    if (this.rightHandSet.has(key)) return "right";
+    return "unknown";
+  }
+}
+
+const handMap = new HandMap();
 
 ConfigEvent.subscribe((eventKey) => {
   if (eventKey === "monkey" && TestState.isActive) {
@@ -10,6 +60,9 @@ ConfigEvent.subscribe((eventKey) => {
     } else {
       $("#monkey").addClass("hidden");
     }
+  }
+  if (Config.monkey && eventKey === "layout") {
+    void handMap.update(Config.layout);
   }
 });
 
@@ -37,8 +90,6 @@ const elementsFast = {
   "10": document.querySelector("#monkey .fast .left"),
   "11": document.querySelector("#monkey .fast .both"),
 };
-
-let last = "right";
 
 function toBit(b: boolean): "1" | "0" {
   return b ? "1" : "0";
@@ -70,23 +121,41 @@ export function updateFastOpacity(num: number): void {
   $("#monkey").css({ animationDuration: animDuration + "s" });
 }
 
-export function type(): void {
+export async function type(event: JQuery.KeyDownEvent): Promise<void> {
   if (!Config.monkey) return;
-  if (!left && last === "right") {
+  let char;
+  if (Config.layout === "default") {
+    char = event.key;
+  } else {
+    char = await LayoutEmulator.getCharFromEvent(event);
+  }
+  if (char === null) return;
+
+  const MonkeyHand = handMap.getHand(char);
+  if (MonkeyHand === "left" || char === " ") {
     left = true;
-    last = "left";
-  } else if (!right) {
+  }
+  if (MonkeyHand === "right" || char === " ") {
     right = true;
-    last = "right";
   }
   update();
 }
 
-export function stop(): void {
+export async function stop(event: JQuery.KeyUpEvent): Promise<void> {
   if (!Config.monkey) return;
-  if (left) {
+  let char;
+  if (Config.layout === "default") {
+    char = event.key;
+  } else {
+    char = await LayoutEmulator.getCharFromEvent(event);
+  }
+  if (char === null) return;
+
+  const MonkeyHand = handMap.getHand(char);
+  if (MonkeyHand === "left" || char === " ") {
     left = false;
-  } else if (right) {
+  }
+  if (MonkeyHand === "right" || char === " ") {
     right = false;
   }
   update();
